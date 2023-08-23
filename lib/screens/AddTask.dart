@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class AddTask extends StatefulWidget {
@@ -62,9 +63,11 @@ class _AddTaskState extends State<AddTask> {
                 ),
               ),
               onTap: () {
-                print(namecontroller.text);
-                print(bodycontroller.text);
-                print(deadlinecontroller.text);
+                if (kDebugMode) {
+                  print(namecontroller.text);
+                  print(bodycontroller.text);
+                  print(deadlinecontroller.text);
+                }
               },
             )
           ],
