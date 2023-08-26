@@ -1,5 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:testapp/screens/HomePage.dart';
 
 class AddTask extends StatefulWidget {
   const AddTask({super.key});
@@ -10,8 +13,8 @@ class AddTask extends StatefulWidget {
 
 class _AddTaskState extends State<AddTask> {
   late TextEditingController namecontroller, bodycontroller, deadlinecontroller;
-  List priority = ["High", "Medium", "Low"];
-  List category = ["Daily", "Weekly", "Monthly"];
+  var priority = ["Low", "Medium", "High"];
+  var category = ["Daily", "Weekly", "Monthly"];
 
   @override
   void initState() {
@@ -19,6 +22,24 @@ class _AddTaskState extends State<AddTask> {
     namecontroller = TextEditingController();
     bodycontroller = TextEditingController();
     deadlinecontroller = TextEditingController();
+    getTask();
+  }
+
+  //List<dynamic> taskList = [];
+  String taskList = "";
+  String priorityValue = 'Low';
+  String categoryValue = 'Daily';
+
+  void getTask() async {
+    var sharedPref = await SharedPreferences.getInstance();
+    String tasks = sharedPref.getString("taskList") ?? "";
+    taskList = tasks.isNotEmpty ? tasks.substring(0, tasks.length - 1) : tasks;
+    print(taskList);
+  }
+
+  void addTask() async {
+    var sharedPref = await SharedPreferences.getInstance();
+    sharedPref.setString("taskList", taskList);
   }
 
   @override
@@ -48,6 +69,52 @@ class _AddTaskState extends State<AddTask> {
               controller: deadlinecontroller,
               multiLine: false,
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: DropdownButton(
+                value: priorityValue,
+                icon: const Icon(Icons.arrow_downward),
+                underline: Container(
+                  height: 2,
+                  color: Colors.blue,
+                ),
+                elevation: 16,
+                onChanged: (String? value) {
+                  setState(() {
+                    priorityValue = value!;
+                  });
+                },
+                items: priority.map((String value) {
+                  return DropdownMenuItem(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: DropdownButton(
+                value: categoryValue,
+                icon: const Icon(Icons.arrow_downward),
+                underline: Container(
+                  height: 2,
+                  color: Colors.blue,
+                ),
+                elevation: 16,
+                onChanged: (String? value) {
+                  setState(() {
+                    categoryValue = value!;
+                  });
+                },
+                items: category.map((String value) {
+                  return DropdownMenuItem(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ),
             InkWell(
               child: Container(
                 decoration: BoxDecoration(
@@ -68,6 +135,23 @@ class _AddTaskState extends State<AddTask> {
                   print(bodycontroller.text);
                   print(deadlinecontroller.text);
                 }
+                Map<String, dynamic> taskMap = {
+                  "name": namecontroller.text,
+                  "body": bodycontroller.text,
+                  "deadLine": deadlinecontroller.text,
+                  "priority":priorityValue,
+                  "category":categoryValue,
+                };
+                String task = jsonEncode(taskMap);
+                taskList =
+                    taskList.isNotEmpty ? "$taskList,$task]" : "[$task]";
+                addTask();
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => const HomePage()),
+                  ModalRoute.withName('/'),
+                );
               },
             )
           ],
