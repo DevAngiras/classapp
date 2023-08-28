@@ -13,8 +13,8 @@ class AddTask extends StatefulWidget {
 
 class _AddTaskState extends State<AddTask> {
   late TextEditingController namecontroller, bodycontroller, deadlinecontroller;
-  var priority = ["Low", "Medium", "High"];
-  var category = ["Daily", "Weekly", "Monthly"];
+  List<String> priority = ["Low", "Medium", "High"];
+  List<String> category = ["Daily", "Weekly", "Monthly"];
 
   @override
   void initState() {
