@@ -55,7 +55,7 @@ class _AddTaskState extends State<AddTask> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Fields(
-              fieldname: "Name",
+              fieldname: "Title",
               controller: namecontroller,
               multiLine: false,
             ),
@@ -136,7 +136,7 @@ class _AddTaskState extends State<AddTask> {
                   print(deadlinecontroller.text);
                 }
                 Map<String, dynamic> taskMap = {
-                  "name": namecontroller.text,
+                  "title": namecontroller.text,
                   "body": bodycontroller.text,
                   "deadLine": deadlinecontroller.text,
                   "priority":priorityValue,

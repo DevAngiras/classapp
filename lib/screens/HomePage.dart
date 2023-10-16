@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void displayTask() async {
+  void fetchTask() async {
     var sharedPref = await SharedPreferences.getInstance();
     String taskList = sharedPref.getString("taskList") ?? "[]";
     print(taskList);
@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    displayTask();
+    fetchTask();
   }
 
   @override
@@ -58,11 +58,14 @@ class _HomePageState extends State<HomePage> {
               itemCount: finalList.length,
               itemBuilder: (context, index) {
                 Map<String, dynamic> listItemMap = finalList[index];
-                return ListTile(
-                  title: Text(listItemMap['name']),
-                  leading: Text((index + 1).toString()),
-                  subtitle: Text(listItemMap['deadLine']),
-                  trailing: Text(listItemMap['category']),
+                return Card(
+                  color: Color.fromARGB(255, 241, 164, 255),
+                  child: ListTile(
+                    title: Text(listItemMap['title'],style: const TextStyle(fontSize: 17),),
+                    leading: Text((index + 1).toString(),style: const TextStyle(fontSize: 17),),
+                    subtitle: Text(listItemMap['deadLine'],style: const TextStyle(fontSize: 17),),
+                    trailing: Text(listItemMap['category'],style: const TextStyle(fontSize: 17),),
+                  ),
                 );
               },
             ),
